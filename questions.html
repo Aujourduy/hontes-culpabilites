@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #fff8e7, #ffebc8cc);
+      font-family: 'Nunito', sans-serif;
+      color: #3b2f2f;
+      margin: 0;
+      padding: 2rem;
+    }
+    .question-container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .highlight {
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-weight: bold;
+    }
+    .highlight-sentiment-honte { background-color: #ffb3b3; }
+    .highlight-sentiment-culpabilite { background-color: #ffd6b3; }
+    .highlight-periode-0-10 { background-color: #e6f7ff; }
+    .highlight-periode-10-20 { background-color: #ccf2ff; }
+    .highlight-periode-20-30 { background-color: #b3ecff; }
+    .highlight-periode-30-40 { background-color: #99e6ff; }
+    .highlight-periode-40-50 { background-color: #80dfff; }
+    .highlight-periode-50plus { background-color: #66d9ff; }
+    .highlight-domaine-spiritualite { background-color: #f9c5d1; }
+    .highlight-domaine-mental { background-color: #c1e1c1; }
+    .highlight-domaine-professionnel { background-color: #fdd9a0; }
+    .highlight-domaine-financier { background-color: #ffecb3; }
+    .highlight-domaine-social { background-color: #e0bbf7; }
+    .highlight-domaine-familial { background-color: #ffc2e0; }
+    .highlight-domaine-sante { background-color: #d0f0c0; }
+    .progress {
+      margin-bottom: 1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 5rem;
+      font-family: 'Nunito', sans-serif;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .answers-list {
+      margin-top: 2rem;
+    }
+    .answer-item {
+      background: #f8f0e3;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .answer-item span {
+      flex: 1;
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+    button {
+      background-color: #d8904c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="question-container">
+    <div class="progress" id="progress"></div>
+    <div class="question" id="question"></div>
+
+    <textarea id="reponse" placeholder="Entrée = valider, Shift+Entrée = retour à la ligne"></textarea>
+
+    <div class="nav-buttons">
+      <button onclick="passerALaPrecedente()">Question précédente</button>
+      <button onclick="passerALaSuivante()">Question suivante</button>
+    </div>
+
+    <div class="answers-list" id="answersList"></div>
+  </div>
+
+  <script>
+    let index = 0;
+    let questions = [];
+    let questionEl, progressEl, textarea, answersList;
+
+    function passerALaSuivante() {
+      index++;
+      if (index >= questions.length) index = questions.length - 1;
+      localStorage.setItem("currentQuestion", index);
+      afficherQuestion();
+    }
+
+    function passerALaPrecedente() {
+      index--;
+      if (index < 0) index = 0;
+      localStorage.setItem("currentQuestion", index);
+      afficherQuestion();
+    }
+
+    function getClassSentiment(s) {
+      return s === "honte" ? "highlight-sentiment-honte" : "highlight-sentiment-culpabilite";
+    }
+
+    function getClassPeriode(p) {
+      return {
+        "0-10 ans": "highlight-periode-0-10",
+        "10-20 ans": "highlight-periode-10-20",
+        "20-30 ans": "highlight-periode-20-30",
+        "30-40 ans": "highlight-periode-30-40",
+        "40-50 ans": "highlight-periode-40-50",
+        "50 ans et plus": "highlight-periode-50plus"
+      }[p] || "";
+    }
+
+    function getClassDomaine(d) {
+      if (d.includes("spiritualité")) return "highlight-domaine-spiritualite";
+      if (d.includes("mental")) return "highlight-domaine-mental";
+      if (d.includes("professionnel")) return "highlight-domaine-professionnel";
+      if (d.includes("financier")) return "highlight-domaine-financier";
+      if (d.includes("social")) return "highlight-domaine-social";
+      if (d.includes("familial")) return "highlight-domaine-familial";
+      if (d.includes("santé")) return "highlight-domaine-sante";
+      return "";
+    }
+
+    function afficherQuestion() {
+      if (index >= questions.length) {
+        localStorage.removeItem("currentQuestion");
+        window.location.href = "resultats.html";
+        return;
+      }
+      const q = questions[index];
+      progressEl.textContent = `Question ${index + 1} / ${questions.length}`;
+      questionEl.innerHTML = `Décris un souvenir lié à la <span class="highlight ${getClassSentiment(q.sentiment)}">${q.sentiment}</span>,<br>
+        durant la période <span class="highlight ${getClassPeriode(q.periode)}">${q.periode}</span>,<br>
+        dans le domaine <span class="highlight ${getClassDomaine(q.domaine)}">${q.domaine}</span>.`;
+      textarea.value = "";
+      answersList.innerHTML = "";
+      chargerReponses();
+    }
+
+    function enregistrerReponse() {
+      const text = textarea.value.trim();
+      if (!text) return;
+      const key = `reponses_${index}`;
+      const data = JSON.parse(localStorage.getItem(key) || "[]");
+      data.push(text);
+      localStorage.setItem(key, JSON.stringify(data));
+      afficherUneReponse(text);
+      textarea.value = "";
+    }
+
+    function afficherUneReponse(texte) {
+      const div = document.createElement("div");
+      div.className = "answer-item";
+      const span = document.createElement("span");
+      span.textContent = texte;
+      div.appendChild(span);
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "✏️";
+      editBtn.onclick = () => {
+        textarea.value = span.textContent;
+        div.remove();
+        supprimerReponse(span.textContent);
+      };
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "🗑️";
+      deleteBtn.onclick = () => {
+        div.remove();
+        supprimerReponse(span.textContent);
+      };
+      div.appendChild(editBtn);
+      div.appendChild(deleteBtn);
+      answersList.appendChild(div);
+    }
+
+    function supprimerReponse(texte) {
+      const key = `reponses_${index}`;
+      let data = JSON.parse(localStorage.getItem(key) || "[]");
+      data = data.filter(r => r !== texte);
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function chargerReponses() {
+      const key = `reponses_${index}`;
+      const data = JSON.parse(localStorage.getItem(key) || "[]");
+      data.forEach(afficherUneReponse);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const sentiments = ["honte", "culpabilité"];
+      const periodes = ["0-10 ans", "10-20 ans", "20-30 ans", "30-40 ans", "40-50 ans", "50 ans et plus"];
+      const domaines = ["spiritualité", "mental/psychologie", "professionnel", "financier", "social", "familial et couple", "santé et physique"];
+
+      sentiments.forEach(sent => {
+        periodes.forEach(per => {
+          domaines.forEach(dom => {
+            questions.push({ sentiment: sent, periode: per, domaine: dom });
+          });
+        });
+      });
+
+      index = parseInt(localStorage.getItem("currentQuestion") || "0");
+      questionEl = document.getElementById("question");
+      progressEl = document.getElementById("progress");
+      textarea = document.getElementById("reponse");
+      answersList = document.getElementById("answersList");
+
+      textarea.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          enregistrerReponse();
+        }
+      });
+
+      afficherQuestion();
+    });
+  </script>
+</body>
+</html>

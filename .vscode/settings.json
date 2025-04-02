@@ -1,0 +1,8 @@
+{
+    "liveServer.settings.root": "/",
+    "liveServer.settings.mount": [
+      ["/", "."]
+    ],
+    "liveServer.settings.open": "index.html"
+  }
+  

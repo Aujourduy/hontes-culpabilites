@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Résultats</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #fff8e7, #ffebc8cc);
+      font-family: 'Nunito', sans-serif;
+      color: #3b2f2f;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 1rem;
+    }
+    .export-buttons, .manual-entry {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .manual-entry textarea {
+      width: 100%;
+      max-width: 500px;
+      height: 4rem;
+    }
+    button {
+      background-color: #d8904c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+    select {
+      font-size: 1rem;
+      padding: 0.4rem;
+      border-radius: 0.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #ffe2b0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Vos réponses</h1>
+
+    <div class="export-buttons">
+      <button onclick="exportCSV()">📤 Exporter CSV</button>
+      <button onclick="document.getElementById('importFile').click()">📥 Importer CSV</button>
+      <input type="file" id="importFile" accept=".csv" style="display:none" onchange="importCSV(event)" />
+    </div>
+
+    <div class="manual-entry">
+      <select id="newSentiment">
+        <option value="honte">honte</option>
+        <option value="culpabilité">culpabilité</option>
+      </select>
+      <select id="newPeriode">
+        <option>0-10 ans</option>
+        <option>10-20 ans</option>
+        <option>20-30 ans</option>
+        <option>30-40 ans</option>
+        <option>40-50 ans</option>
+        <option>50 ans et plus</option>
+      </select>
+      <select id="newDomaine">
+        <option>spiritualité</option>
+        <option>mental/psychologie</option>
+        <option>professionnel</option>
+        <option>financier</option>
+        <option>social</option>
+        <option>familial et couple</option>
+        <option>santé et physique</option>
+      </select>
+      <textarea id="newReponse" placeholder="Entrée = valider, Shift+Entrée = retour à la ligne"></textarea>
+      <button onclick="ajouterReponseManuelle()">➕ Valider la réponse</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Émotion</th>
+          <th>Période</th>
+          <th>Domaine</th>
+          <th>Réponse</th>
+        </tr>
+      </thead>
+      <tbody id="resultatsBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let questions = [];
+
+    function chargerQuestions() {
+      const sentiments = ["honte", "culpabilité"];
+      const periodes = ["0-10 ans", "10-20 ans", "20-30 ans", "30-40 ans", "40-50 ans", "50 ans et plus"];
+      const domaines = ["spiritualité", "mental/psychologie", "professionnel", "financier", "social", "familial et couple", "santé et physique"];
+      sentiments.forEach(s => {
+        periodes.forEach(p => {
+          domaines.forEach(d => {
+            questions.push({ sentiment: s, periode: p, domaine: d });
+          });
+        });
+      });
+    }
+
+    function afficherResultats() {
+      const tbody = document.getElementById("resultatsBody");
+      tbody.innerHTML = "";
+      questions.forEach((q, i) => {
+        const reponses = JSON.parse(localStorage.getItem(`reponses_${i}`) || "[]");
+        reponses.forEach(r => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${q.sentiment}</td>
+            <td>${q.periode}</td>
+            <td>${q.domaine}</td>
+            <td>${r}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      });
+    }
+
+    function ajouterReponseManuelle() {
+      const sentiment = document.getElementById("newSentiment").value;
+      const periode = document.getElementById("newPeriode").value;
+      const domaine = document.getElementById("newDomaine").value;
+      const texte = document.getElementById("newReponse").value.trim();
+      if (!texte) return;
+      const idx = questions.findIndex(q => q.sentiment === sentiment && q.periode === periode && q.domaine === domaine);
+      if (idx < 0) return;
+      const key = `reponses_${idx}`;
+      const data = JSON.parse(localStorage.getItem(key) || "[]");
+      data.push(texte);
+      localStorage.setItem(key, JSON.stringify(data));
+      document.getElementById("newReponse").value = "";
+      afficherResultats();
+    }
+
+    function exportCSV() {
+      let csv = "sentiment,periode,domaine,reponse\n";
+      questions.forEach((q, i) => {
+        const reponses = JSON.parse(localStorage.getItem(`reponses_${i}`) || "[]");
+        reponses.forEach(r => {
+          csv += `"${q.sentiment}","${q.periode}","${q.domaine}","${r.replace(/"/g, '""')}"\n`;
+        });
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "reponses.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function importCSV(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const lines = e.target.result.split("\n").slice(1);
+        const map = {};
+        questions.forEach((q, i) => {
+          map[`${q.sentiment}|${q.periode}|${q.domaine}`] = i;
+        });
+        const all = {};
+        lines.forEach(line => {
+          const [sentiment, periode, domaine, reponse] = line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(s => s?.replaceAll('"', '').trim());
+          const key = `${sentiment}|${periode}|${domaine}`;
+          const idx = map[key];
+          if (!all[idx]) all[idx] = [];
+          all[idx].push(reponse);
+        });
+        Object.entries(all).forEach(([k, arr]) => {
+          localStorage.setItem(`reponses_${k}`, JSON.stringify(arr));
+        });
+        afficherResultats();
+      };
+      reader.readAsText(file);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("newReponse").addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      ajouterReponseManuelle();
+    }
+  });
+      chargerQuestions();
+      afficherResultats();
+    });
+  </script>
+</body>
+</html>
