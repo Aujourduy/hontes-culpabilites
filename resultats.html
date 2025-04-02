@@ -12,7 +12,7 @@
       font-family: 'Nunito', sans-serif;
       color: #3b2f2f;
       margin: 0;
-      padding: 2rem;
+      padding-top: 80px;
     }
     .navbar-nav .nav-link {
       color: #333;
@@ -20,7 +20,8 @@
       border-radius: 0.3rem;
       padding: 0.5rem 1rem;
     }
-    .navbar-nav .nav-link:hover {
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
       background-color: #d8904c;
       color: white;
     }
@@ -91,13 +92,11 @@
   </style>
 </head>
 <body>
-
-  <!-- Barre de navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center" href="#">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
         <img src="ton-logo.png" alt="Logo" width="40" height="40" class="me-2">
-        <span class="fw-bold">Mon Outil</span>
+        <span class="fw-bold">Liste de mes hontes et culpabilités</span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -105,13 +104,16 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
+            <a class="nav-link" href="index.html">Accueil</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="questions.html">Questions</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="resultats.html">Résultats</a>
+            <a class="nav-link active" href="resultats.html">Résultats</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="qui-est-duy.html">Qui est Duy</a>
+            <a class="nav-link" href="duy.html">Qui est Duy</a>
           </li>
         </ul>
       </div>
