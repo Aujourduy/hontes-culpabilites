@@ -44,7 +44,8 @@
     </div>
     <div class="mb-3">
       <button class="btn btn-primary me-2" onclick="validateResponse()">Valider (ou appuyer sur Entrée)</button>
-      <button class="btn btn-secondary" onclick="nextQuestion()">Passer à la question suivante</button>
+      <button class="btn btn-secondary me-2" onclick="nextQuestion()">Passer à la question suivante</button>
+      <button class="btn btn-danger" onclick="resetAll()">Tout recommencer</button>
     </div>
     <div class="mt-4">
       <label for="questionSelect" class="form-label">Naviguer vers une question :</label>
@@ -92,9 +93,7 @@
         responseInput.focus();
       }, 50);
 
-      // ✅ Enregistrement dans le localStorage
       localStorage.setItem("responses", JSON.stringify(responses));
-
       renderAnswers(currentIndex);
     }
 
@@ -150,6 +149,14 @@
     function jumpToQuestion(index) {
       currentIndex = parseInt(index);
       renderQuestion();
+    }
+
+    function resetAll() {
+      if (confirm("Es-tu sûr de vouloir tout recommencer ? Toutes les réponses seront supprimées.")) {
+        responses = {};
+        localStorage.removeItem("responses");
+        renderQuestion();
+      }
     }
 
     responseInput.addEventListener("keydown", function (e) {
