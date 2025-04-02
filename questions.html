@@ -1,250 +1,159 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Questions</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Outil d'introspection</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(to bottom, #fff8e7, #ffebc8cc);
       font-family: 'Nunito', sans-serif;
-      color: #3b2f2f;
-      margin: 0;
+      background-color: #fdf6e3;
+      color: #333;
       padding: 2rem;
-    }
-    .question-container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .question {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
     }
     .highlight {
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-      font-weight: bold;
+      padding: 0.1em 0.3em;
+      border-radius: 0.3em;
     }
-    .highlight-sentiment-honte { background-color: #ffb3b3; }
-    .highlight-sentiment-culpabilite { background-color: #ffd6b3; }
-    .highlight-periode-0-10 { background-color: #e6f7ff; }
-    .highlight-periode-10-20 { background-color: #ccf2ff; }
-    .highlight-periode-20-30 { background-color: #b3ecff; }
-    .highlight-periode-30-40 { background-color: #99e6ff; }
-    .highlight-periode-40-50 { background-color: #80dfff; }
-    .highlight-periode-50plus { background-color: #66d9ff; }
-    .highlight-domaine-spiritualite { background-color: #f9c5d1; }
-    .highlight-domaine-mental { background-color: #c1e1c1; }
-    .highlight-domaine-professionnel { background-color: #fdd9a0; }
-    .highlight-domaine-financier { background-color: #ffecb3; }
-    .highlight-domaine-social { background-color: #e0bbf7; }
-    .highlight-domaine-familial { background-color: #ffc2e0; }
-    .highlight-domaine-sante { background-color: #d0f0c0; }
-    .progress {
-      margin-bottom: 1rem;
-      font-weight: 600;
-      text-align: center;
-    }
-    textarea {
-      width: 100%;
-      height: 5rem;
-      font-family: 'Nunito', sans-serif;
-      padding: 0.5rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .answers-list {
-      margin-top: 2rem;
-    }
-    .answer-item {
-      background: #f8f0e3;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      margin-bottom: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .answer-item span {
-      flex: 1;
-    }
-    .nav-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1rem;
-    }
-    button {
-      background-color: #d8904c;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-    }
+    .sentiment-0 { background-color: #ffd6d6; }
+    .sentiment-1 { background-color: #ffe4b5; }
+    .period-0 { background-color: #e0f7fa; }
+    .period-1 { background-color: #b2ebf2; }
+    .period-2 { background-color: #80deea; }
+    .period-3 { background-color: #4dd0e1; }
+    .period-4 { background-color: #26c6da; }
+    .period-5 { background-color: #00bcd4; }
+    .domain-0 { background-color: #f8bbd0; }
+    .domain-1 { background-color: #e1bee7; }
+    .domain-2 { background-color: #d1c4e9; }
+    .domain-3 { background-color: #c5cae9; }
+    .domain-4 { background-color: #b3e5fc; }
+    .domain-5 { background-color: #b2dfdb; }
+    .domain-6 { background-color: #c8e6c9; }
   </style>
 </head>
 <body>
-  <div class="question-container">
-    <div class="progress" id="progress"></div>
-    <div class="question" id="question"></div>
+  <div class="container">
+    <div class="mb-4 fs-4" id="question"></div>
 
-    <textarea id="reponse" placeholder="Entrée = valider, Shift+Entrée = retour à la ligne"></textarea>
-
-    <div class="nav-buttons">
-      <button onclick="passerALaPrecedente()">Question précédente</button>
-      <button onclick="passerALaSuivante()">Question suivante</button>
+    <div class="mb-2">
+      <input type="text" id="responseInput" class="form-control" />
+      <div class="form-text">Appuie sur <strong>Entrée</strong> pour valider ta réponse. Pour un retour à la ligne, utilise <strong>Shift + Entrée</strong>.</div>
     </div>
 
-    <div class="answers-list" id="answersList"></div>
+    <div class="mb-3">
+      <button class="btn btn-primary me-2" onclick="validateResponse()">Valider (ou appuyer sur Entrée)</button>
+      <button class="btn btn-secondary" onclick="nextQuestion()">Passer à la question suivante</button>
+    </div>
+
+    <div class="mt-4">
+      <label for="questionSelect" class="form-label">Naviguer vers une question :</label>
+      <select id="questionSelect" class="form-select" onchange="jumpToQuestion(this.value)"></select>
+    </div>
+
+    <div class="answers mt-4" id="answers"></div>
+    <div class="mt-2 text-end text-muted" id="totalResponsesContainer"></div>
   </div>
 
   <script>
-    let index = 0;
-    let questions = [];
-    let questionEl, progressEl, textarea, answersList;
+    const sentiments = ["honte", "culpabilité"];
+    const periods = ["0-10 ans", "10-20 ans", "20-30 ans", "30-40 ans", "40-50 ans", "50 ans et plus"];
+    const domains = ["spiritualité", "mental/psychologie", "professionnel", "financier", "social", "familial et couple", "santé et physique"];
 
-    function passerALaSuivante() {
-      index++;
-      if (index >= questions.length) index = questions.length - 1;
-      localStorage.setItem("currentQuestion", index);
-      afficherQuestion();
+    let currentIndex = 0;
+    let responses = {};
+
+    const responseInput = document.getElementById('responseInput');
+    const questionEl = document.getElementById('question');
+    const answersEl = document.getElementById('answers');
+    const questionSelect = document.getElementById('questionSelect');
+    const totalResponsesContainer = document.getElementById('totalResponsesContainer');
+
+    const questions = sentiments.flatMap((s, si) =>
+      periods.flatMap((p, pi) =>
+        domains.map((d, di) => ({ sentiment: s, sIndex: si, period: p, pIndex: pi, domain: d, dIndex: di }))
+      )
+    );
+
+    function renderQuestion() {
+      const { sentiment, sIndex, period, pIndex, domain, dIndex } = questions[currentIndex];
+      questionEl.innerHTML = `Dans la période <span class="highlight period-${pIndex}">${period}</span>, quelles ont été les <span class="highlight sentiment-${sIndex}">${sentiment}s</span> que tu ressens encore aujourd’hui, même très faiblement, dans le domaine <span class="highlight domain-${dIndex}">${domain}</span> ?`;
+      renderAnswers(currentIndex);
+      questionSelect.value = currentIndex;
     }
 
-    function passerALaPrecedente() {
-      index--;
-      if (index < 0) index = 0;
-      localStorage.setItem("currentQuestion", index);
-      afficherQuestion();
+    function validateResponse() {
+      const val = responseInput.value.trim();
+      if (!val) return;
+      if (!responses[currentIndex]) responses[currentIndex] = [];
+      responses[currentIndex].push(val);
+      responseInput.value = '';
+      renderAnswers(currentIndex);
     }
 
-    function getClassSentiment(s) {
-      return s === "honte" ? "highlight-sentiment-honte" : "highlight-sentiment-culpabilite";
-    }
-
-    function getClassPeriode(p) {
-      return {
-        "0-10 ans": "highlight-periode-0-10",
-        "10-20 ans": "highlight-periode-10-20",
-        "20-30 ans": "highlight-periode-20-30",
-        "30-40 ans": "highlight-periode-30-40",
-        "40-50 ans": "highlight-periode-40-50",
-        "50 ans et plus": "highlight-periode-50plus"
-      }[p] || "";
-    }
-
-    function getClassDomaine(d) {
-      if (d.includes("spiritualité")) return "highlight-domaine-spiritualite";
-      if (d.includes("mental")) return "highlight-domaine-mental";
-      if (d.includes("professionnel")) return "highlight-domaine-professionnel";
-      if (d.includes("financier")) return "highlight-domaine-financier";
-      if (d.includes("social")) return "highlight-domaine-social";
-      if (d.includes("familial")) return "highlight-domaine-familial";
-      if (d.includes("santé")) return "highlight-domaine-sante";
-      return "";
-    }
-
-    function afficherQuestion() {
-      if (index >= questions.length) {
-        localStorage.removeItem("currentQuestion");
-        window.location.href = "resultats.html";
-        return;
+    function renderAnswers(key) {
+      answersEl.innerHTML = "";
+      let total = 0;
+      Object.values(responses).forEach(r => total += r.length);
+      if (totalResponsesContainer) {
+        totalResponsesContainer.textContent = `${total} réponse${total > 1 ? 's' : ''} enregistrée${total > 1 ? 's' : ''}`;
       }
-      const q = questions[index];
-      progressEl.textContent = `Question ${index + 1} / ${questions.length}`;
-      questionEl.innerHTML = `Décris un souvenir lié à la <span class="highlight ${getClassSentiment(q.sentiment)}">${q.sentiment}</span>,<br>
-        durant la période <span class="highlight ${getClassPeriode(q.periode)}">${q.periode}</span>,<br>
-        dans le domaine <span class="highlight ${getClassDomaine(q.domaine)}">${q.domaine}</span>.`;
-      textarea.value = "";
-      answersList.innerHTML = "";
-      chargerReponses();
-    }
-
-    function enregistrerReponse() {
-      const text = textarea.value.trim();
-      if (!text) return;
-      const key = `reponses_${index}`;
-      const data = JSON.parse(localStorage.getItem(key) || "[]");
-      data.push(text);
-      localStorage.setItem(key, JSON.stringify(data));
-      afficherUneReponse(text);
-      textarea.value = "";
-    }
-
-    function afficherUneReponse(texte) {
-      const div = document.createElement("div");
-      div.className = "answer-item";
-      const span = document.createElement("span");
-      span.textContent = texte;
-      div.appendChild(span);
-      const editBtn = document.createElement("button");
-      editBtn.textContent = "✏️";
-      editBtn.onclick = () => {
-        textarea.value = span.textContent;
-        div.remove();
-        supprimerReponse(span.textContent);
-      };
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "🗑️";
-      deleteBtn.onclick = () => {
-        div.remove();
-        supprimerReponse(span.textContent);
-      };
-      div.appendChild(editBtn);
-      div.appendChild(deleteBtn);
-      answersList.appendChild(div);
-    }
-
-    function supprimerReponse(texte) {
-      const key = `reponses_${index}`;
-      let data = JSON.parse(localStorage.getItem(key) || "[]");
-      data = data.filter(r => r !== texte);
-      localStorage.setItem(key, JSON.stringify(data));
-    }
-
-    function chargerReponses() {
-      const key = `reponses_${index}`;
-      const data = JSON.parse(localStorage.getItem(key) || "[]");
-      data.forEach(afficherUneReponse);
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const sentiments = ["honte", "culpabilité"];
-      const periodes = ["0-10 ans", "10-20 ans", "20-30 ans", "30-40 ans", "40-50 ans", "50 ans et plus"];
-      const domaines = ["spiritualité", "mental/psychologie", "professionnel", "financier", "social", "familial et couple", "santé et physique"];
-
-      sentiments.forEach(sent => {
-        periodes.forEach(per => {
-          domaines.forEach(dom => {
-            questions.push({ sentiment: sent, periode: per, domaine: dom });
-          });
-        });
+      const resps = responses[key] || [];
+      resps.forEach((r, i) => {
+        const div = document.createElement('div');
+        div.className = 'alert alert-light d-flex justify-content-between align-items-center';
+        div.innerHTML = `
+          <span>${r}</span>
+          <span>
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="editResponse(${key}, ${i})">✏️</button>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteResponse(${key}, ${i})">❌</button>
+          </span>
+        `;
+        answersEl.appendChild(div);
       });
+    }
 
-      index = parseInt(localStorage.getItem("currentQuestion") || "0");
-      questionEl = document.getElementById("question");
-      progressEl = document.getElementById("progress");
-      textarea = document.getElementById("reponse");
-      answersList = document.getElementById("answersList");
+    function editResponse(key, i) {
+      const newText = prompt("Modifier la réponse :", responses[key][i]);
+      if (newText !== null) {
+        responses[key][i] = newText.trim();
+        renderAnswers(key);
+      }
+    }
 
-      textarea.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          enregistrerReponse();
-        }
-      });
+    function deleteResponse(key, i) {
+      responses[key].splice(i, 1);
+      renderAnswers(key);
+    }
 
-      afficherQuestion();
+    function nextQuestion() {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        alert("Félicitations, tu as terminé les 84 questions !");
+      }
+    }
+
+    function jumpToQuestion(index) {
+      currentIndex = parseInt(index);
+      renderQuestion();
+    }
+
+    responseInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") validateResponse();
     });
+
+    questions.forEach((q, i) => {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = `${i + 1}. ${q.sentiment} | ${q.period} | ${q.domain}`;
+      questionSelect.appendChild(option);
+    });
+
+    renderQuestion();
   </script>
 </body>
 </html>
