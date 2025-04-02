@@ -131,11 +131,20 @@
       });
     }
 
+    function getResponses() {
+      return JSON.parse(localStorage.getItem("responses") || "{}");
+    }
+
+    function saveResponses(data) {
+      localStorage.setItem("responses", JSON.stringify(data));
+    }
+
     function afficherResultats() {
       const tbody = document.getElementById("resultatsBody");
       tbody.innerHTML = "";
+      const allResponses = getResponses();
       questions.forEach((q, i) => {
-        const reponses = JSON.parse(localStorage.getItem(`reponses_${i}`) || "[]");
+        const reponses = allResponses[i] || [];
         reponses.forEach(r => {
           const row = document.createElement("tr");
           row.innerHTML = `
@@ -157,18 +166,20 @@
       if (!texte) return;
       const idx = questions.findIndex(q => q.sentiment === sentiment && q.periode === periode && q.domaine === domaine);
       if (idx < 0) return;
-      const key = `reponses_${idx}`;
-      const data = JSON.parse(localStorage.getItem(key) || "[]");
-      data.push(texte);
-      localStorage.setItem(key, JSON.stringify(data));
+
+      const allResponses = getResponses();
+      if (!allResponses[idx]) allResponses[idx] = [];
+      allResponses[idx].push(texte);
+      saveResponses(allResponses);
       document.getElementById("newReponse").value = "";
       afficherResultats();
     }
 
     function exportCSV() {
       let csv = "sentiment,periode,domaine,reponse\n";
+      const allResponses = getResponses();
       questions.forEach((q, i) => {
-        const reponses = JSON.parse(localStorage.getItem(`reponses_${i}`) || "[]");
+        const reponses = allResponses[i] || [];
         reponses.forEach(r => {
           csv += `"${q.sentiment}","${q.periode}","${q.domaine}","${r.replace(/"/g, '""')}"\n`;
         });
@@ -200,21 +211,19 @@
           if (!all[idx]) all[idx] = [];
           all[idx].push(reponse);
         });
-        Object.entries(all).forEach(([k, arr]) => {
-          localStorage.setItem(`reponses_${k}`, JSON.stringify(arr));
-        });
+        saveResponses(all);
         afficherResultats();
       };
       reader.readAsText(file);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("newReponse").addEventListener("keydown", function(e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      ajouterReponseManuelle();
-    }
-  });
+      document.getElementById("newReponse").addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          ajouterReponseManuelle();
+        }
+      });
       chargerQuestions();
       afficherResultats();
     });

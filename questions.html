@@ -37,27 +37,19 @@
 <body>
   <div class="container">
     <div class="mb-4 fs-4" id="question"></div>
-
-    <!-- Nombre de réponses enregistrées sur une ligne distincte -->
     <div class="mb-2 text-muted" id="totalResponsesContainer"></div>
-
-    <!-- Champ de saisie sur une ligne distincte (remplacé par un <textarea>) -->
     <div class="mb-2">
       <textarea id="responseInput" class="form-control" rows="4"></textarea>
       <div class="form-text">Appuie sur <strong>Entrée</strong> pour valider ta réponse. Pour un retour à la ligne, utilise <strong>Shift + Entrée</strong>.</div>
     </div>
-
-    <!-- Boutons sur une ligne distincte -->
     <div class="mb-3">
       <button class="btn btn-primary me-2" onclick="validateResponse()">Valider (ou appuyer sur Entrée)</button>
       <button class="btn btn-secondary" onclick="nextQuestion()">Passer à la question suivante</button>
     </div>
-
     <div class="mt-4">
       <label for="questionSelect" class="form-label">Naviguer vers une question :</label>
       <select id="questionSelect" class="form-select" onchange="jumpToQuestion(this.value)"></select>
     </div>
-
     <div class="answers mt-4" id="answers"></div>
   </div>
 
@@ -67,7 +59,7 @@
     const domains = ["spiritualité", "mental/psychologie", "professionnel", "financier", "social", "familial et couple", "santé et physique"];
 
     let currentIndex = 0;
-    let responses = {};
+    let responses = JSON.parse(localStorage.getItem("responses") || "{}");
 
     const responseInput = document.getElementById('responseInput');
     const questionEl = document.getElementById('question');
@@ -89,23 +81,20 @@
     }
 
     function validateResponse() {
-      let val = responseInput.value.trim(); // Enlever les espaces et retours à la ligne superflus
-      
-      // Si la valeur est vide après le nettoyage, ne rien faire
+      let val = responseInput.value.trim();
       if (!val) return;
-      
-      // Ajouter la réponse dans les réponses
+
       if (!responses[currentIndex]) responses[currentIndex] = [];
       responses[currentIndex].push(val);
-      
-      // Réinitialiser le champ de saisie après validation
-      responseInput.value = ''; // Réinitialisation du champ
+      responseInput.value = '';
 
-      // Retarder légèrement l'action de focus pour s'assurer que la réinitialisation se fait correctement
       setTimeout(() => {
-        responseInput.focus(); // Placer le curseur au début du champ de saisie
-      }, 50); // Un délai de 50 ms pour s'assurer que la réinitialisation est terminée
-      
+        responseInput.focus();
+      }, 50);
+
+      // ✅ Enregistrement dans le localStorage
+      localStorage.setItem("responses", JSON.stringify(responses));
+
       renderAnswers(currentIndex);
     }
 
@@ -118,8 +107,6 @@
       }
 
       const resps = responses[key] || [];
-      
-      // Inverser l'ordre des réponses pour afficher les plus récentes en haut
       const reversedResps = [...resps].reverse();
 
       reversedResps.forEach((r, i) => {
@@ -128,8 +115,8 @@
         div.innerHTML = `
           <span>${r}</span>
           <span>
-            <button class="btn btn-sm btn-outline-primary me-1" onclick="editResponse(${key}, ${i})">✏️</button>
-            <button class="btn btn-sm btn-outline-danger" onclick="deleteResponse(${key}, ${i})">❌</button>
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="editResponse(${key}, ${resps.length - 1 - i})">✏️</button>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteResponse(${key}, ${resps.length - 1 - i})">❌</button>
           </span>
         `;
         answersEl.appendChild(div);
@@ -140,12 +127,14 @@
       const newText = prompt("Modifier la réponse :", responses[key][i]);
       if (newText !== null) {
         responses[key][i] = newText.trim();
+        localStorage.setItem("responses", JSON.stringify(responses));
         renderAnswers(key);
       }
     }
 
     function deleteResponse(key, i) {
       responses[key].splice(i, 1);
+      localStorage.setItem("responses", JSON.stringify(responses));
       renderAnswers(key);
     }
 
@@ -163,9 +152,8 @@
       renderQuestion();
     }
 
-    // Modifier l'événement keydown pour éviter la validation sur Shift + Entrée
     responseInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && !e.shiftKey) { // Si Entrée est pressée sans Shift
+      if (e.key === "Enter" && !e.shiftKey) {
         validateResponse();
       }
     });
