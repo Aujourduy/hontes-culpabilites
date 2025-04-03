@@ -11,6 +11,7 @@
             font-family: 'Nunito', sans-serif;
             background-color: #f8f4e9;
             color: #333;
+            scroll-behavior: smooth;
         }
         .sentiment-honte {
             background-color: #fecaca;
@@ -91,6 +92,11 @@
         }
         #answer-input {
             min-height: 100px;
+            transition: all 0.2s ease;
+        }
+        #answer-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.5);
         }
         .modal {
             display: none;
@@ -101,6 +107,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(2px);
         }
         .modal-content {
             background-color: #f8f4e9;
@@ -111,6 +118,11 @@
             max-width: 500px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .close-modal {
             color: #aaa;
@@ -118,11 +130,51 @@
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+            transition: color 0.2s;
         }
         .close-modal:hover {
             color: black;
         }
+        .author-btn {
+            transition: all 0.2s ease;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            text-decoration-color: rgba(254, 243, 199, 0.7);
+        }
+        .author-btn:hover {
+            color: #fef3c7;
+            text-decoration-color: #fef3c7;
+            transform: translateY(-1px);
+        }
+        .btn {
+            transition: all 0.2s ease;
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .rotate-chevron {
+            transition: transform 0.3s ease;
+        }
+        .answer-enter {
+            animation: answerEnter 0.3s ease-out;
+        }
+        @keyframes answerEnter {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
 </head>
 <body class="min-h-screen flex flex-col">
     <header class="bg-amber-900 text-amber-50 py-4 px-6 shadow-md">
@@ -132,7 +184,7 @@
                 <h1 class="text-2xl font-bold">Dissoudre ses hontes et ses culpabilités</h1>
             </div>
             <div>
-                <button id="about-btn" class="text-amber-50 hover:text-amber-200 font-medium">
+                <button id="about-btn" class="author-btn no-underline text-amber-100 hover:text-amber-50 hover:bg-white/50 font-medium text-lg px-4 py-2 rounded">
                     Duy Dang
                 </button>
             </div>
@@ -155,7 +207,7 @@
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-semibold">Question <span id="current-question-number">1</span>/84</h2>
                 <div class="flex items-center">
-                    <button id="menu-toggle" class="bg-amber-700 hover:bg-amber-800 text-white px-4 py-2 rounded-lg transition">
+                    <button id="menu-toggle" class="btn bg-amber-700 hover:bg-amber-800 text-white px-4 py-2 rounded-lg transition">
                         Menu
                     </button>
                 </div>
@@ -166,10 +218,10 @@
             </div>
 
             <div class="flex justify-between mb-6">
-                <button id="prev-question" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition">
+                <button id="prev-question" class="btn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition">
                     Question précédente
                 </button>
-                <button id="next-question" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                <button id="next-question" class="btn bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
                     Question suivante
                 </button>
             </div>
@@ -181,9 +233,9 @@
                 </label>
                 <textarea id="answer-input"
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                     placeholder="Décrivez votre ressenti... Appuyez sur Entrée pour valider, Shift+Entrée pour aller à la ligne"></textarea>
+                      placeholder="Décrivez votre ressenti... Appuyez sur Entrée pour valider, Shift+Entrée pour aller à la ligne"></textarea>
                 <button id="submit-answer"
-                      class="mt-2 w-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                      class="btn mt-2 w-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
                     Valider
                 </button>
             </div>
@@ -225,10 +277,10 @@
                 </div>
                 <textarea id="custom-answer-input"
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                     placeholder="Décrivez votre ressenti..."></textarea>
+                      placeholder="Décrivez votre ressenti..."></textarea>
                 <div class="flex justify-end mt-2">
                     <button id="submit-custom-answer"
-                          class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                          class="btn bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
                         Ajouter cette réponse
                     </button>
                 </div>
@@ -250,7 +302,7 @@
         <div id="menu-view" class="hidden max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-semibold">Menu</h2>
-                <button id="close-menu" class="bg-amber-600 hover:bg-amber-7 00 text-white px-4 py-2 rounded-lg transition">
+                <button id="close-menu" class="btn bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
                     Retour aux questions
                 </button>
             </div>
@@ -258,20 +310,20 @@
             <div class="mb-6">
                 <h3 class="text-lg font-medium mb-3">Navigation</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <button data-view="all-answers" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition w-full text-left">
+                    <button data-view="all-answers" class="btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition w-full text-left">
                         Voir toutes mes réponses
                     </button>
-                    <button data-view="export" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition w-full text-left">
+                    <button data-view="export" class="btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition w-full text-left">
                         Exporter mes réponses
                     </button>
-                    <button data-view="import" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition w-full text-left">
+                    <button data-view="import" class="btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition w-full text-left">
                         Importer des réponses
                     </button>
                 </div>
             </div>
 
             <div class="mb-6">
-                <h3 class="text-lg font-medium mb-3">Liste des questions</h3>
+                <h3 class="text-lg font-medium mb-3">Liste des questions à choisir</h3>
                 <div class="overflow-y-auto max-h-96 border border-gray-200 rounded-lg">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -295,7 +347,7 @@
         <div id="all-answers-view" class="hidden max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-semibold">Toutes mes réponses</h2>
-                <button data-view="menu" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                <button data-view="menu" class="btn bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
                     Retour au menu
                 </button>
             </div>
@@ -309,14 +361,14 @@
         <div id="export-view" class="hidden max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-semibold">Exporter mes réponses</h2>
-                <button data-view="menu" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                <button data-view="menu" class="btn bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
                     Retour au menu
                 </button>
             </div>
 
             <div class="mb-4">
                 <p class="text-gray-700 mb-4">Vous pouvez exporter toutes vos réponses au format CSV pour les sauvegarder ou les partager.</p>
-                <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                <button id="export-btn" class="btn bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
                     Exporter vers CSV
                 </button>
             </div>
@@ -324,7 +376,7 @@
             <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
                 <label for="export-content" class="block text-sm font-medium text-gray-700 mb-2">Contenu exporté</label>
                 <textarea id="export-content" rows="10" class="w-full px-3 py-2 border border-gray-300 rounded-md" readonly></textarea>
-                <button id="copy-export" class="mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition">
+                <button id="copy-export" class="btn mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition">
                     Copier le texte
                 </button>
             </div>
@@ -334,7 +386,7 @@
         <div id="import-view" class="hidden max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-semibold">Importer des réponses</h2>
-                <button data-view="menu" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                <button data-view="menu" class="btn bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
                     Retour au menu
                 </button>
             </div>
@@ -342,7 +394,7 @@
             <div class="mb-4">
                 <p class="text-gray-700 mb-4">Vous pouvez importer des réponses à partir d'un fichier CSV précédemment exporté.</p>
                 <input type="file" id="import-file" class="hidden" accept=".csv">
-                <button id="select-file-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                <button id="select-file-btn" class="btn bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                     Sélectionner un fichier
                 </button>
                 <span id="selected-file-name" class="ml-3 text-gray-600">Aucun fichier sélectionné</span>
@@ -351,7 +403,7 @@
             <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
                 <label for="import-content" class="block text-sm font-medium text-gray-700 mb-2">Ou coller directement le contenu CSV ici</label>
                 <textarea id="import-content" rows="10" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Collez ici le contenu CSV..."></textarea>
-                <button id="import-btn" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                <button id="import-btn" class="btn mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                     Importer les réponses
                 </button>
             </div>
@@ -367,7 +419,7 @@
             <h2 class="text-2xl font-semibold mb-4">Félicitations !</h2>
             <p class="text-lg mb-6">Vous avez terminé toutes les questions de cette exploration intérieure.</p>
             <p class="mb-6">Nous vous encourageons à exporter vos réponses pour les conserver ou les partager avec un professionnel si vous le souhaitez.</p>
-            <button data-view="export" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition text-lg">
+            <button data-view="export" class="btn bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition text-lg">
                 Exporter mes réponses
             </button>
         </div>
@@ -479,6 +531,9 @@
 
                 // Populate questions list for navigation
                 populateQuestionsList();
+                
+                // Focus on answer input
+                answerInput.focus();
             }
 
             // Set up event listeners
@@ -511,10 +566,12 @@
                         freeAnswerMode.classList.add('hidden');
                         customAnswerMode.classList.remove('hidden');
                         toggleAnswerMode.textContent = 'Mode de saisie standard';
+                        customAnswerInput.focus();
                     } else {
                         freeAnswerMode.classList.remove('hidden');
                         customAnswerMode.classList.add('hidden');
                         toggleAnswerMode.textContent = 'Mode de saisie personnalisée';
+                        answerInput.focus();
                     }
                 });
 
@@ -528,6 +585,7 @@
                 closeMenu.addEventListener('click', () => {
                     menuView.classList.add('hidden');
                     questionView.classList.remove('hidden');
+                    answerInput.focus();
                 });
 
                 // View navigation buttons
@@ -577,6 +635,7 @@
                 switch(viewName) {
                     case 'question':
                         questionView.classList.remove('hidden');
+                        answerInput.focus();
                         break;
                     case 'menu':
                         menuView.classList.remove('hidden');
@@ -640,6 +699,9 @@
 
                 // Save current state
                 saveData();
+                
+                // Auto-focus on answer input
+                answerInput.focus();
             }
 
             // Display answers for the current question in reverse chronological order
@@ -657,7 +719,7 @@
 
                 sortedAnswers.forEach((answer, i) => {
                     const answerElement = document.createElement('div');
-                    answerElement.className = 'answer-item bg-gray-50 p-3 rounded-lg flex justify-between items-center';
+                    answerElement.className = 'answer-item bg-gray-50 p-3 rounded-lg flex justify-between items-center answer-enter';
                     answerElement.innerHTML = `
                         <div class="flex-grow whitespace-pre-line">${answer.text}</div>
                         <div class="flex space-x-2">
@@ -712,6 +774,9 @@
 
                 // Save data
                 saveData();
+                
+                // Auto-focus on answer input for next answer
+                answerInput.focus();
             }
 
             // Add a custom answer
@@ -751,9 +816,9 @@
                     saveData();
 
                     // Show success message
-                    alert(`Réponse ajoutée à la question: ${sentiment} (${age}, ${domain})`);
+                    showToast(`Réponse ajoutée à la question: ${sentiment} (${age}, ${domain})`);
                 } else {
-                    alert('Question non trouvée');
+                    showToast('Question non trouvée', 'error');
                 }
             }
 
@@ -844,6 +909,7 @@
                         displayQuestion(index);
                         menuView.classList.add('hidden');
                         questionView.classList.remove('hidden');
+                        answerInput.focus();
                     });
 
                     questionsList.appendChild(row);
@@ -870,7 +936,7 @@
                     );
 
                     const questionBlock = document.createElement('div');
-                    questionBlock.className = 'border border-gray-200 rounded-lg overflow-hidden';
+                    questionBlock.className = 'border border-gray-200 rounded-lg overflow-hidden fade-in';
 
                     // Create the collapsible header
                     const header = document.createElement('div');
@@ -898,7 +964,7 @@
                             </h3>
                             <p class="text-sm text-gray-600 mt-1">${question.answers.length} réponse(s)</p>
                         </div>
-                        <svg class="w-5 h-5 text-gray-500 transition-transform duration-300 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-5 h-5 text-gray-500 rotate-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     `;
@@ -909,7 +975,7 @@
                     content.innerHTML = `
                         <div class="p-4 space-y-3">
                             ${question.answers.map((answer, i) => `
-                                <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center">
+                                <div class="bg-gray-50 p-3 rounded-lg flex justify-between items-center answer-enter">
                                     <div class="whitespace-pre-line">${answer.text}</div>
                                     <div class="flex space-x-2">
                                         <button class="edit-all-answer text-blue-600 hover:text-blue-800" data-question="${questionIndex}" data-index="${i}">
@@ -1058,6 +1124,8 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+                
+                showToast('Exportation réussie !');
             }
 
             // Copy export content to clipboard
@@ -1066,11 +1134,7 @@
                 document.execCommand('copy');
 
                 // Show feedback
-                const originalText = copyExport.textContent;
-                copyExport.textContent = 'Copié !';
-                setTimeout(() => {
-                    copyExport.textContent = originalText;
-                }, 2000);
+                showToast('Contenu copié dans le presse-papiers !');
             }
 
             // Handle file selection for import
@@ -1091,7 +1155,7 @@
             function importAnswers() {
                 const csvData = importContent.value.trim();
                 if (!csvData) {
-                    alert('Veuillez coller ou sélectionner un fichier CSV à importer.');
+                    showToast('Veuillez coller ou sélectionner un fichier CSV à importer.', 'error');
                     return;
                 }
 
@@ -1127,13 +1191,27 @@
                         displayQuestion(currentQuestionIndex);
                         populateQuestionsList();
 
-                        alert('Importation réussie !');
+                        showToast('Importation réussie !');
                         navigateToView('menu');
                     } catch (error) {
                         console.error('Error importing CSV:', error);
-                        alert('Une erreur est survenue lors de l\'importation. Vérifiez le format du fichier.');
+                        showToast('Une erreur est survenue lors de l\'importation. Vérifiez le format du fichier.', 'error');
                     }
                 }
+            }
+
+            // Show toast notification
+            function showToast(message, type = 'success') {
+                const toast = document.createElement('div');
+                toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-md text-white font-medium ${
+                    type === 'success' ? 'bg-green-600' : 'bg-red-600'
+                } fade-in`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
             }
 
             // Save data to localStorage
