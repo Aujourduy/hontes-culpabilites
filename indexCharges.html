@@ -180,8 +180,10 @@
     <header class="bg-amber-900 text-amber-50 py-4 px-6 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <img src="ton-logo.png" alt="Logo" class="h-16 w-auto" />
-                <h1 class="text-2xl font-bold">Dissoudre ses hontes et ses culpabilités</h1>
+                <a href="index.html">
+                    <img src="ton-logo.png" alt="Logo" class="h-16 w-auto hover:opacity-80 transition" />
+                </a>
+            <h1 class="text-2xl font-bold">Dissoudre ses hontes et ses culpabilités</h1>
             </div>
             <div>
                 <button id="about-btn" class="author-btn no-underline text-amber-100 hover:text-amber-50 hover:bg-white/50 font-medium text-lg px-4 py-2 rounded">
@@ -190,8 +192,9 @@
             </div>
         </div>
     </header>
+ 
 
-    <!-- About Modal -->
+    <!-- About Modal 
     <div id="about-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -200,7 +203,8 @@
             <p>Son approche unique permet de dissoudre les hontes et culpabilités qui entravent notre épanouissement personnel.</p>
         </div>
     </div>
-
+    -->
+    
     <main class="flex-grow container mx-auto px-4 py-8">
         <!-- Question View -->
         <div id="question-view" class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
@@ -1228,5 +1232,41 @@
             init();
         });
     </script>
+        <script>
+            document.getElementById('about-btn').addEventListener('click', async () => {
+              const response = await fetch('duy.html');
+              const content = await response.text();
+          
+              const modal = document.createElement('div');
+              modal.className = 'fixed inset-0 bg-black/60 flex items-center justify-center z-50';
+              modal.innerHTML = `
+                <div id="duy-modal" class="bg-white max-w-2xl w-full rounded-lg shadow-lg p-6 relative transform scale-95 opacity-0 transition-all duration-700 ease-out">
+                  <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl" id="close-modal">&times;</button>
+                  <div class="overflow-y-auto max-h-[80vh]">${content}</div>
+                </div>
+              `;
+              document.body.appendChild(modal);
+          
+              // 🌀 Ouverture douce
+              requestAnimationFrame(() => {
+                const duyModal = document.getElementById('duy-modal');
+                duyModal.classList.remove('scale-95', 'opacity-0');
+                duyModal.classList.add('scale-100', 'opacity-100');
+              });
+          
+              // ✨ Fermeture douce
+              document.getElementById('close-modal').addEventListener('click', () => {
+                const duyModal = document.getElementById('duy-modal');
+                duyModal.classList.remove('scale-100', 'opacity-100');
+                duyModal.classList.add('scale-95', 'opacity-0');
+          
+                // ⏳ Attendre la fin de la transition avant de retirer
+                setTimeout(() => {
+                  modal.remove();
+                }, 300); // même durée que transition
+              });
+            });
+          </script>
+    
 </body>
 </html>
