@@ -1,0 +1,54 @@
+--- index.html
++++ index.html
+@@ -1,6 +1,7 @@
+ <!DOCTYPE html>
+ <html lang="fr">
+ <head>
++  <!-- PATCH: changement d'ordre et de formulation des questions -->
+@@ -XXX,YYY +XXX,YYY @@
+-    sentiments.forEach(sentiment => {
+-        ages.forEach(age => {
+-            domains.forEach(domain => {
+-                questions.push({
+-                    sentiment,
+-                    age,
+-                    domain,
+-                    answers: []
+-                });
+-            });
+-        });
+-    });
++    ages.forEach(age => {
++        domains.forEach(domain => {
++            sentiments.forEach(sentiment => {
++                questions.push({
++                    age,
++                    domain,
++                    sentiment,
++                    answers: []
++                });
++            });
++        });
++    });
+
+@@ -HTML_PHRASE_BLOCK
+-<span id="sentiment-part" class="highlight sentiment-honte">honte</span> que vous avez ressentie entre
+-<span id="age-part" class="highlight age-0-10">0-10 ans</span> dans le domaine
+-<span id="domain-part" class="highlight domaine-spiritualite">spiritualite</span>.
++Entre <span id="age-part" class="highlight age-0-10">0-10 ans</span>, dans le domaine 
++<span id="domain-part" class="highlight domaine-spiritualite">spiritualité</span>, quelles ont été tes expériences de 
++<span id="sentiment-part" class="highlight sentiment-honte">honte</span> ?
+
+@@ -JS_DISPLAY_QUESTION_ORDER
+- sentimentPart.textContent = question.sentiment;
+- sentimentPart.className = `highlight sentiment-${question.sentiment}`;
+- agePart.textContent = question.age;
+- agePart.className = `highlight ${ageClass}`;
+- domainPart.textContent = question.domain;
+- domainPart.className = `highlight domaine-${question.domain}`;
++ agePart.textContent = question.age;
++ agePart.className = `highlight ${ageClass}`;
++ domainPart.textContent = question.domain;
++ domainPart.className = `highlight domaine-${question.domain}`;
++ sentimentPart.textContent = question.sentiment;
++ sentimentPart.className = `highlight sentiment-${question.sentiment}`;

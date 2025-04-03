@@ -172,8 +172,8 @@ Entre <span id="age-part" class="highlight age-0-10">0-10 ans</span>, dans le do
                             <option value="professionnel" class="bg-blue-800 text-white">Professionnel</option>
                             <option value="financier" class="bg-yellow-800 text-white">Financier</option>
                             <option value="social" class="bg-pink-800 text-white">Social</option>
-                            <option value="familial" class="bg-amber-800 text-white">Familial et couple</option>
-                            <option value="sante" class="bg-teal-800 text-white">Sante et physique</option>
+                            <option value="familial et couple" class="bg-amber-800 text-white">Familial et couple</option>
+                            <option value="sante et physique" class="bg-teal-800 text-white">Sante et physique</option>
                         </select>
                     </div>
                 </div>
@@ -334,17 +334,16 @@ Entre <span id="age-part" class="highlight age-0-10">0-10 ans</span>, dans le do
             // Data structure
             const sentiments = ["honte", "culpabilité"];
             const ages = ["0-10 ans", "10-20 ans", "20-30 ans", "30-40 ans", "40-50 ans", "50 ans et plus"];
-            const domains = ["spiritualite", "mental/psychologie", "professionnel", "financier", "social", "familial", "sante"];
+            const domains = ["spiritualite", "mental/psychologie", "professionnel", "financier", "social", "familial et couple", "sante et physique"];
             
             // Generate all questions
             let questions = [];
 ages.forEach(age => {
-    domains.forEach(domain => {
-        sentiments.forEach(sentiment => {
             questions.push({ age, domain, sentiment, answers: [] });
-        });
-    });
-});
+                        });
+                    });
+                });
+            });
 
             // Current question index
             let currentQuestionIndex = 0;
@@ -543,7 +542,7 @@ ages.forEach(age => {
                 // Update question text with highlighted parts
                 sentimentPart.textContent = question.sentiment;
                 agePart.textContent = question.age;
-                domainPart.textContent = (question.domain === 'sante') ? 'santé/physique' : (question.domain === 'familial') ? 'familial/couple' : question.domain;
+                domainPart.textContent = question.domain;
 
                 // Update highlight classes
                 sentimentPart.className = `highlight sentiment-${question.sentiment === 'honte' ? 'honte' : 'culpabilite'}`;
@@ -759,14 +758,6 @@ ages.forEach(age => {
                     const domainClass = `domaine-${question.domain.split('/')[0].replace(' ', '-')}`;
                     
                     row.innerHTML = `
-                        <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
-                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                            <span class="${ageClass} px-1 rounded">${question.age}</span>
-                            <span class="${domainClass} px-1 rounded">${question.domain === 'sante' ? 'santé/physique' : question.domain === 'familial' ? 'familial/couple' : question.domain}</span>
-                            <span class="${question.sentiment === 'honte' ? 'sentiment-honte' : 'sentiment-culpabilite'} px-1 rounded">${question.sentiment}</span>
-                        </td>
-                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${question.answers.length}</td>
-                    `;
                         <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
                             <span class="${question.sentiment === 'honte' ? 'sentiment-honte' : 'sentiment-culpabilite'} px-1 rounded">${question.sentiment}</span>

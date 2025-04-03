@@ -1,0 +1,28 @@
+--- index.html+++ index.html@@ -114,9 +114,9 @@             </div>
+ 
+             <div id="question-text" class="text-lg mb-6 leading-relaxed">
+-                <span id="sentiment-part" class="highlight sentiment-honte">honte</span> que vous avez ressentie entre
+-                <span id="age-part" class="highlight age-0-10">0-10 ans</span> dans le domaine
+-                <span id="domain-part" class="highlight domaine-spiritualite">spiritualite</span>.
++Entre <span id="age-part" class="highlight age-0-10">0-10 ans</span>, dans le domaine 
++<span id="domain-part" class="highlight domaine-spiritualite">spiritualité</span>, quelles ont été tes expériences de 
++<span id="sentiment-part" class="highlight sentiment-honte">honte</span> ?
+             </div>
+ 
+             <div class="flex justify-between mb-6">
+@@ -338,14 +338,8 @@             
+             // Generate all questions
+             let questions = [];
+-            sentiments.forEach(sentiment => {
+-                ages.forEach(age => {
+-                    domains.forEach(domain => {
+-                        questions.push({
+-                            sentiment,
+-                            age,
+-                            domain,
+-                            answers: []
++ages.forEach(age => {
++            questions.push({ age, domain, sentiment, answers: [] });
+                         });
+                     });
+                 });

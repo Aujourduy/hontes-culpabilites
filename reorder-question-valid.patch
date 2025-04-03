@@ -1,0 +1,44 @@
+--- index.html
++++ index.html
+@@ -1,14 +1,14 @@
+-<span id="sentiment-part" class="highlight sentiment-honte">honte</span> que vous avez ressentie entre
+
+-<span id="age-part" class="highlight age-0-10">0-10 ans</span> dans le domaine
+
+-<span id="domain-part" class="highlight domaine-spiritualite">spiritualite</span>.
+
++Entre <span id="age-part" class="highlight age-0-10">0-10 ans</span>, dans le domaine 
+
++<span id="domain-part" class="highlight domaine-spiritualite">spiritualité</span>, quelles ont été tes expériences de 
+
++<span id="sentiment-part" class="highlight sentiment-honte">honte</span> ?
+
+ 
+
+-sentiments.forEach(sentiment => {
+
+-    ages.forEach(age => {
+
+-        domains.forEach(domain => {
+
++ages.forEach(age => {
+
++    domains.forEach(domain => {
+
++        sentiments.forEach(sentiment => {
+
+             questions.push({
+
+-                sentiment,
+
+                 age,
+
+                 domain,
+
++                sentiment,
+
+                 answers: []
+
+             });
+
+         });
