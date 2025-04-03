@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exploration Intérieure</title>
+    <title>Dissoudre ses hontes et culpabilités</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -92,17 +92,62 @@
         #answer-input {
             min-height: 100px;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #f8f4e9;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-modal:hover {
+            color: black;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
     <header class="bg-amber-900 text-amber-50 py-4 px-6 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
-          <div class="flex items-center gap-4">
-            <img src="ton-logo.png" alt="Logo" class="h-10 w-auto" />
-            <h1 class="text-2xl font-bold">Exploration Intérieure</h1>
-          </div>
+            <div class="flex items-center gap-4">
+                <img src="ton-logo.png" alt="Logo" class="h-16 w-auto" />
+                <h1 class="text-2xl font-bold">Dissoudre ses hontes et ses culpabilités</h1>
+            </div>
+            <div>
+                <button id="about-btn" class="text-amber-50 hover:text-amber-200 font-medium">
+                    Duy Dang
+                </button>
+            </div>
         </div>
-      </header>
+    </header>
+
+    <!-- About Modal -->
+    <div id="about-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="text-xl font-bold mb-4">Duy Dang</h2>
+            <p class="mb-4">Duy Dang est un révélateur de (magnifiques) vérités cachées, accompagnant les individus dans leur voyage intérieur pour libérer les émotions enfouies et retrouver une paix intérieure.</p>
+            <p>Son approche unique permet de dissoudre les hontes et culpabilités qui entravent notre épanouissement personnel.</p>
+        </div>
+    </div>
 
     <main class="flex-grow container mx-auto px-4 py-8">
         <!-- Question View -->
@@ -205,7 +250,7 @@
         <div id="menu-view" class="hidden max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-semibold">Menu</h2>
-                <button id="close-menu" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                <button id="close-menu" class="bg-amber-600 hover:bg-amber-7 00 text-white px-4 py-2 rounded-lg transition">
                     Retour aux questions
                 </button>
             </div>
@@ -329,7 +374,7 @@
     </main>
 
     <footer class="bg-amber-900 text-amber-50 py-4 px-6 text-center text-sm">
-        <p>Exploration Intérieure - Un outil pour mieux se connaître</p>
+        <p>Duy Dang - Révélateur de (magnifiques) vérités cachées</p>
     </footer>
 
     <script>
@@ -399,6 +444,11 @@
             const customDomain = document.getElementById('custom-domain');
             const customAnswerInput = document.getElementById('custom-answer-input');
             const submitCustomAnswer = document.getElementById('submit-custom-answer');
+
+            // About modal elements
+            const aboutBtn = document.getElementById('about-btn');
+            const aboutModal = document.getElementById('about-modal');
+            const closeModal = document.querySelector('.close-modal');
 
             // Initialize the app
             function init() {
@@ -496,6 +546,21 @@
                 selectFileBtn.addEventListener('click', () => importFile.click());
                 importFile.addEventListener('change', handleFileSelect);
                 importBtn.addEventListener('click', importAnswers);
+
+                // About modal functionality
+                aboutBtn.addEventListener('click', () => {
+                    aboutModal.style.display = 'block';
+                });
+
+                closeModal.addEventListener('click', () => {
+                    aboutModal.style.display = 'none';
+                });
+
+                window.addEventListener('click', (event) => {
+                    if (event.target === aboutModal) {
+                        aboutModal.style.display = 'none';
+                    }
+                });
             }
 
             // Navigate between views
@@ -863,9 +928,9 @@
                         </div>
                         <div class="p-4 border-t border-gray-200">
                             <div class="flex">
-                                <input type="text" id="new-answer-${questionIndex}" 
-                                     class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-amber-500 focus:border-amber-500" 
-                                     placeholder="Ajouter une réponse...">
+                                <input type="text" id="new-answer-${questionIndex}"
+                                      class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-amber-500 focus:border-amber-500"
+                                      placeholder="Ajouter une réponse...">
                                 <button class="add-answer-btn bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-r-lg transition"
                                     data-question="${questionIndex}">
                                     Ajouter
