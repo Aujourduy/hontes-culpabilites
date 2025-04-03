@@ -19,22 +19,27 @@
             background-color: #bfdbfe;
         }
         .age-0-10 {
-            background-color: #fef08a;
+            background-color: #581ee0;
+            color: white;
         }
         .age-10-20 {
-            background-color: #bbf7d0;
+            background-color: #bad810;
         }
         .age-20-30 {
-            background-color: #a5b4fc;
+            background-color: #e00dc4;
+            color: white;
         }
         .age-30-40 {
-            background-color: #fbcfe8;
+            background-color: #e21009;
+            color: white;
         }
         .age-40-50 {
-            background-color: #c7d2fe;
+            background-color: #2d408f;
+            color: white;
         }
         .age-50-plus {
-            background-color: #ddd6fe;
+            background-color: #7e7207;
+            color: white;
         }
         .domaine-spiritualite {
             background-color: #7e22ce;
@@ -109,8 +114,8 @@
             </div>
 
             <div id="question-text" class="text-lg mb-6 leading-relaxed">
-                <span id="sentiment-part" class="highlight sentiment-honte">honte</span> que vous avez ressentie entre 
-                <span id="age-part" class="highlight age-0-10">0-10 ans</span> dans le domaine 
+                <span id="sentiment-part" class="highlight sentiment-honte">honte</span> que vous avez ressentie entre
+                <span id="age-part" class="highlight age-0-10">0-10 ans</span> dans le domaine
                 <span id="domain-part" class="highlight domaine-spiritualite">spiritualite</span>.
             </div>
 
@@ -129,10 +134,10 @@
                     Votre réponse (Appuyez sur Entrée pour valider, Shift+Entrée pour aller à la ligne)
                 </label>
                 <textarea id="answer-input" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500" 
-                    placeholder="Décrivez votre ressenti... Appuyez sur Entrée pour valider, Shift+Entrée pour aller à la ligne"></textarea>
+                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
+                     placeholder="Décrivez votre ressenti... Appuyez sur Entrée pour valider, Shift+Entrée pour aller à la ligne"></textarea>
                 <button id="submit-answer" 
-                    class="mt-2 w-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                     class="mt-2 w-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
                     Valider
                 </button>
             </div>
@@ -173,11 +178,11 @@
                     </div>
                 </div>
                 <textarea id="custom-answer-input" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500" 
-                    placeholder="Décrivez votre ressenti..."></textarea>
+                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
+                     placeholder="Décrivez votre ressenti..."></textarea>
                 <div class="flex justify-end mt-2">
                     <button id="submit-custom-answer" 
-                        class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                         class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
                         Ajouter cette réponse
                     </button>
                 </div>
@@ -345,11 +350,11 @@
                     });
                 });
             });
-            
+
             // Current question index
             let currentQuestionIndex = 0;
             let userAuthenticated = false;
-            
+
             // DOM elements
             const questionView = document.getElementById('question-view');
             const menuView = document.getElementById('menu-view');
@@ -357,36 +362,36 @@
             const exportView = document.getElementById('export-view');
             const importView = document.getElementById('import-view');
             const completionView = document.getElementById('completion-view');
-            
+
             const currentQuestionNumber = document.getElementById('current-question-number');
             const sentimentPart = document.getElementById('sentiment-part');
             const agePart = document.getElementById('age-part');
             const domainPart = document.getElementById('domain-part');
-            
+
             const answerInput = document.getElementById('answer-input');
             const submitAnswer = document.getElementById('submit-answer');
             const answersContainer = document.getElementById('answers-container');
             const answersCount = document.getElementById('answers-count');
-            
+
             const prevQuestion = document.getElementById('prev-question');
             const nextQuestion = document.getElementById('next-question');
-            
+
             const menuToggle = document.getElementById('menu-toggle');
             const closeMenu = document.getElementById('close-menu');
-            
+
             const questionsList = document.getElementById('questions-list');
             const allAnswersContainer = document.getElementById('all-answers-container');
-            
+
             const exportBtn = document.getElementById('export-btn');
             const exportContent = document.getElementById('export-content');
             const copyExport = document.getElementById('copy-export');
-            
+
             const importFile = document.getElementById('import-file');
             const selectFileBtn = document.getElementById('select-file-btn');
             const selectedFileName = document.getElementById('selected-file-name');
             const importContent = document.getElementById('import-content');
             const importBtn = document.getElementById('import-btn');
-            
+
             // Custom answer mode elements
             const freeAnswerMode = document.getElementById('free-answer-mode');
             const customAnswerMode = document.getElementById('custom-answer-mode');
@@ -396,7 +401,7 @@
             const customDomain = document.getElementById('custom-domain');
             const customAnswerInput = document.getElementById('custom-answer-input');
             const submitCustomAnswer = document.getElementById('submit-custom-answer');
-            
+
             // Initialize the app
             function init() {
                 // Load saved data from localStorage
@@ -417,23 +422,23 @@
                         console.error("Error parsing saved data:", e);
                     }
                 }
-                
+
                 // Display the current question
                 displayQuestion(currentQuestionIndex);
-                
+
                 // Set up event listeners
                 setupEventListeners();
-                
+
                 // Populate questions list for navigation
                 populateQuestionsList();
             }
-            
+
             // Set up event listeners
             function setupEventListeners() {
                 // Navigation buttons
                 prevQuestion.addEventListener('click', () => navigateQuestions(-1));
                 nextQuestion.addEventListener('click', () => navigateQuestions(1));
-                
+
                 // Answer submission
                 submitAnswer.addEventListener('click', addAnswer);
                 answerInput.addEventListener('keydown', function(e) {
@@ -442,7 +447,7 @@
                         addAnswer();
                     }
                 });
-                
+
                 // Custom answer submission
                 submitCustomAnswer.addEventListener('click', addCustomAnswer);
                 customAnswerInput.addEventListener('keydown', function(e) {
@@ -451,7 +456,7 @@
                         addCustomAnswer();
                     }
                 });
-                
+
                 // Toggle answer mode
                 toggleAnswerMode.addEventListener('click', function() {
                     if (customAnswerMode.classList.contains('hidden')) {
@@ -464,19 +469,19 @@
                         toggleAnswerMode.textContent = 'Mode de saisie personnalisée';
                     }
                 });
-                
+
                 // Menu navigation
                 menuToggle.addEventListener('click', () => {
                     questionView.classList.add('hidden');
                     menuView.classList.remove('hidden');
                     populateQuestionsList(); // Refresh the list when opening menu
                 });
-                
+
                 closeMenu.addEventListener('click', () => {
                     menuView.classList.add('hidden');
                     questionView.classList.remove('hidden');
                 });
-                
+
                 // View navigation buttons
                 document.querySelectorAll('[data-view]').forEach(button => {
                     button.addEventListener('click', function() {
@@ -484,17 +489,17 @@
                         navigateToView(targetView);
                     });
                 });
-                
+
                 // Export functionality
                 exportBtn.addEventListener('click', exportAnswers);
                 copyExport.addEventListener('click', copyExportContent);
-                
+
                 // Import functionality
                 selectFileBtn.addEventListener('click', () => importFile.click());
                 importFile.addEventListener('change', handleFileSelect);
                 importBtn.addEventListener('click', importAnswers);
             }
-            
+
             // Navigate between views
             function navigateToView(viewName) {
                 // Hide all views
@@ -504,7 +509,7 @@
                 exportView.classList.add('hidden');
                 importView.classList.add('hidden');
                 completionView.classList.add('hidden');
-                
+
                 // Show the target view
                 switch(viewName) {
                     case 'question':
@@ -529,51 +534,64 @@
                         questionView.classList.remove('hidden');
                 }
             }
-            
+
             // Display a question by index
             function displayQuestion(index) {
                 if (index < 0 || index >= questions.length) return;
-                
+
                 currentQuestionIndex = index;
                 const question = questions[index];
-                
+
                 // Update question number
                 currentQuestionNumber.textContent = index + 1;
-                
+
                 // Update question text with highlighted parts
                 sentimentPart.textContent = question.sentiment;
                 agePart.textContent = question.age;
                 domainPart.textContent = question.domain;
-                
+
                 // Update highlight classes
                 sentimentPart.className = `highlight sentiment-${question.sentiment === 'honte' ? 'honte' : 'culpabilite'}`;
-                agePart.className = `highlight age-${question.age.replace(' ', '-').replace('ans', '').replace('et-plus', 'plus').replace('50-plus', '50-plus')}`;
-                domainPart.className = `highlight domaine-${question.domain.split('/')[0]}`;
                 
+                // Corrected age class names
+                let ageClass = '';
+                if (question.age === '0-10 ans') ageClass = 'age-0-10';
+                else if (question.age === '10-20 ans') ageClass = 'age-10-20';
+                else if (question.age === '20-30 ans') ageClass = 'age-20-30';
+                else if (question.age === '30-40 ans') ageClass = 'age-30-40';
+                else if (question.age === '40-50 ans') ageClass = 'age-40-50';
+                else if (question.age === '50 ans et plus') ageClass = 'age-50-plus';
+                
+                agePart.className = `highlight ${ageClass}`;
+                
+                // Domain class
+                const domainClass = `domaine-${question.domain.split('/')[0].replace(' ', '-')}`;
+                domainPart.className = `highlight ${domainClass}`;
+
                 // Display answers
                 displayAnswers(question.answers);
-                
+
                 // Update navigation buttons
                 prevQuestion.disabled = index === 0;
                 nextQuestion.disabled = index === questions.length - 1;
-                
+
                 // Save current state
                 saveData();
             }
-            
+
             // Display answers for the current question in reverse chronological order
             function displayAnswers(answers) {
                 answersContainer.innerHTML = '';
                 answersCount.textContent = answers.length;
-                
+
                 if (answers.length === 0) {
                     answersContainer.innerHTML = '<p class="text-gray-500 italic">Aucune réponse pour cette question</p>';
                     return;
                 }
-                
+
                 // Sort answers by timestamp (newest first)
                 const sortedAnswers = [...answers].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                
+
                 sortedAnswers.forEach((answer, i) => {
                     const answerElement = document.createElement('div');
                     answerElement.className = 'answer-item bg-gray-50 p-3 rounded-lg flex justify-between items-center';
@@ -594,7 +612,7 @@
                     `;
                     answersContainer.appendChild(answerElement);
                 });
-                
+
                 // Add event listeners for answer actions
                 document.querySelectorAll('.edit-answer').forEach(button => {
                     button.addEventListener('click', function() {
@@ -602,7 +620,7 @@
                         editAnswer(answerIndex);
                     });
                 });
-                
+
                 document.querySelectorAll('.delete-answer').forEach(button => {
                     button.addEventListener('click', function() {
                         const answerIndex = parseInt(this.getAttribute('data-index'));
@@ -610,77 +628,77 @@
                     });
                 });
             }
-            
+
             // Add a new answer
             function addAnswer() {
                 const answerText = answerInput.value.trim();
                 if (!answerText) return;
-                
+
                 const question = questions[currentQuestionIndex];
                 question.answers.push({
                     text: answerText,
                     timestamp: new Date().toISOString()
                 });
-                
+
                 // Clear input
                 answerInput.value = '';
-                
+
                 // Update display
                 displayAnswers(question.answers);
                 populateQuestionsList(); // Update the questions list count
-                
+
                 // Save data
                 saveData();
             }
-            
+
             // Add a custom answer
             function addCustomAnswer() {
                 const answerText = customAnswerInput.value.trim();
                 if (!answerText) return;
-                
+
                 const sentiment = customSentiment.value;
                 const age = customAge.value;
                 const domain = customDomain.value;
-                
+
                 // Find the question index
                 const questionIndex = questions.findIndex(q => 
-                    q.sentiment === sentiment && 
-                    q.age === age && 
+                    q.sentiment === sentiment &&
+                    q.age === age &&
                     q.domain === domain
                 );
-                
+
                 if (questionIndex !== -1) {
                     questions[questionIndex].answers.push({
                         text: answerText,
                         timestamp: new Date().toISOString()
                     });
-                    
+
                     // Clear input
                     customAnswerInput.value = '';
-                    
+
                     // If we're currently viewing this question, update the display
                     if (currentQuestionIndex === questionIndex) {
                         displayAnswers(questions[questionIndex].answers);
                     }
-                    
+
                     // Update the questions list count
                     populateQuestionsList();
-                    
+
                     // Save data
                     saveData();
-                    
+
                     // Show success message
                     alert(`Réponse ajoutée à la question: ${sentiment} (${age}, ${domain})`);
                 } else {
                     alert('Question non trouvée');
                 }
             }
-            
+
             // Edit an answer
             function editAnswer(answerIndex) {
                 const question = questions[currentQuestionIndex];
                 const answer = question.answers[answerIndex];
-                
+
                 const newText = prompt("Modifier votre réponse:", answer.text);
                 if (newText !== null && newText.trim() !== '') {
                     answer.text = newText.trim();
@@ -689,7 +707,7 @@
                     saveData();
                 }
             }
-            
+
             // Delete an answer
             function deleteAnswer(answerIndex) {
                 if (confirm("Êtes-vous sûr de vouloir supprimer cette réponse ?")) {
@@ -700,20 +718,20 @@
                     saveData();
                 }
             }
-            
+
             // Navigate between questions
             function navigateQuestions(direction) {
                 const newIndex = currentQuestionIndex + direction;
                 if (newIndex >= 0 && newIndex < questions.length) {
                     displayQuestion(newIndex);
-                    
+
                     // Check if we've completed all questions
                     if (newIndex === questions.length - 1 && direction === 1) {
                         checkCompletion();
                     }
                 }
             }
-            
+
             // Check if all questions are completed
             function checkCompletion() {
                 const allAnswered = questions.every(q => q.answers.length > 0);
@@ -724,66 +742,92 @@
                     }, 1000);
                 }
             }
-            
+
             // Populate questions list for navigation
             function populateQuestionsList() {
                 questionsList.innerHTML = '';
-                
+
                 questions.forEach((question, index) => {
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-gray-50 cursor-pointer';
+                    
+                    // Determine age class
+                    let ageClass = '';
+                    if (question.age === '0-10 ans') ageClass = 'age-0-10';
+                    else if (question.age === '10-20 ans') ageClass = 'age-10-20';
+                    else if (question.age === '20-30 ans') ageClass = 'age-20-30';
+                    else if (question.age === '30-40 ans') ageClass = 'age-30-40';
+                    else if (question.age === '40-50 ans') ageClass = 'age-40-50';
+                    else if (question.age === '50 ans et plus') ageClass = 'age-50-plus';
+                    
+                    // Determine domain class
+                    const domainClass = `domaine-${question.domain.split('/')[0].replace(' ', '-')}`;
+                    
                     row.innerHTML = `
                         <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                            <span class="${question.sentiment === 'honte' ? 'sentiment-honte' : 'sentiment-culpabilite'} px-1 rounded">${question.sentiment}</span> 
-                            <span class="${'age-' + question.age.replace(' ', '-').replace('ans', '').replace('et-plus', 'plus').replace('50-plus', '50-plus')} px-1 rounded">${question.age}</span> 
-                            <span class="${'domaine-' + question.domain.split('/')[0]} px-1 rounded">${question.domain}</span>
+                            <span class="${question.sentiment === 'honte' ? 'sentiment-honte' : 'sentiment-culpabilite'} px-1 rounded">${question.sentiment}</span>
+                            <span class="${ageClass} px-1 rounded">${question.age}</span>
+                            <span class="${domainClass} px-1 rounded">${question.domain}</span>
                         </td>
                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${question.answers.length}</td>
                     `;
-                    
+
                     row.addEventListener('click', () => {
                         displayQuestion(index);
                         menuView.classList.add('hidden');
                         questionView.classList.remove('hidden');
                     });
-                    
+
                     questionsList.appendChild(row);
                 });
             }
-            
+
             // Display all answers in the all answers view with collapsible sections
             function displayAllAnswers() {
                 allAnswersContainer.innerHTML = '';
-                
+
                 // Filter questions that have answers
                 const answeredQuestions = questions.filter(q => q.answers.length > 0);
-                
+
                 if (answeredQuestions.length === 0) {
                     allAnswersContainer.innerHTML = '<p class="text-gray-500 italic">Vous n\'avez pas encore répondu à aucune question.</p>';
                     return;
                 }
-                
+
                 answeredQuestions.forEach((question, index) => {
                     const questionIndex = questions.findIndex(q => 
-                        q.sentiment === question.sentiment && 
-                        q.age === question.age && 
+                        q.sentiment === question.sentiment &&
+                        q.age === question.age &&
                         q.domain === question.domain
                     );
-                    
+
                     const questionBlock = document.createElement('div');
                     questionBlock.className = 'border border-gray-200 rounded-lg overflow-hidden';
-                    
+
                     // Create the collapsible header
                     const header = document.createElement('div');
                     header.className = 'bg-gray-100 p-4 flex justify-between items-center cursor-pointer';
+                    
+                    // Determine age class
+                    let ageClass = '';
+                    if (question.age === '0-10 ans') ageClass = 'age-0-10';
+                    else if (question.age === '10-20 ans') ageClass = 'age-10-20';
+                    else if (question.age === '20-30 ans') ageClass = 'age-20-30';
+                    else if (question.age === '30-40 ans') ageClass = 'age-30-40';
+                    else if (question.age === '40-50 ans') ageClass = 'age-40-50';
+                    else if (question.age === '50 ans et plus') ageClass = 'age-50-plus';
+                    
+                    // Determine domain class
+                    const domainClass = `domaine-${question.domain.split('/')[0].replace(' ', '-')}`;
+                    
                     header.innerHTML = `
                         <div>
                             <h3 class="font-medium">
                                 Question ${questionIndex + 1}: 
-                                <span class="${question.sentiment === 'honte' ? 'sentiment-honte' : 'sentiment-culpabilite'} px-1 rounded">${question.sentiment}</span> 
-                                <span class="${'age-' + question.age.replace(' ', '-').replace('ans', '').replace('et-plus', 'plus').replace('50-plus', '50-plus')} px-1 rounded">${question.age}</span> 
-                                <span class="${'domaine-' + question.domain.split('/')[0]} px-1 rounded">${question.domain}</span>
+                                <span class="${question.sentiment === 'honte' ? 'sentiment-honte' : 'sentiment-culpabilite'} px-1 rounded">${question.sentiment}</span>
+                                <span class="${ageClass} px-1 rounded">${question.age}</span>
+                                <span class="${domainClass} px-1 rounded">${question.domain}</span>
                             </h3>
                             <p class="text-sm text-gray-600 mt-1">${question.answers.length} réponse(s)</p>
                         </div>
@@ -791,7 +835,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     `;
-                    
+
                     // Create the collapsible content
                     const content = document.createElement('div');
                     content.className = 'collapse-content bg-white';
@@ -817,9 +861,9 @@
                         </div>
                         <div class="p-4 border-t border-gray-200">
                             <div class="flex">
-                                <input type="text" id="new-answer-${questionIndex}" 
-                                    class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-amber-500 focus:border-amber-500" 
-                                    placeholder="Ajouter une réponse...">
+                                <input type="text" id="new-answer-${questionIndex}"
+                                     class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-amber-500 focus:border-amber-500"
+                                     placeholder="Ajouter une réponse...">
                                 <button class="add-answer-btn bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-r-lg transition"
                                     data-question="${questionIndex}">
                                     Ajouter
@@ -827,19 +871,19 @@
                             </div>
                         </div>
                     `;
-                    
+
                     // Toggle collapse on header click
                     header.addEventListener('click', () => {
                         const icon = header.querySelector('svg');
                         content.classList.toggle('show');
                         icon.classList.toggle('rotate-180');
                     });
-                    
+
                     questionBlock.appendChild(header);
                     questionBlock.appendChild(content);
                     allAnswersContainer.appendChild(questionBlock);
                 });
-                
+
                 // Add event listeners for answer actions in all answers view
                 document.querySelectorAll('.edit-all-answer').forEach(button => {
                     button.addEventListener('click', function() {
@@ -848,7 +892,7 @@
                         editAnswerInAllView(questionIndex, answerIndex);
                     });
                 });
-                
+
                 document.querySelectorAll('.delete-all-answer').forEach(button => {
                     button.addEventListener('click', function() {
                         const questionIndex = parseInt(this.getAttribute('data-question'));
@@ -856,19 +900,19 @@
                         deleteAnswerInAllView(questionIndex, answerIndex);
                     });
                 });
-                
+
                 document.querySelectorAll('.add-answer-btn').forEach(button => {
                     button.addEventListener('click', function() {
                         const questionIndex = parseInt(this.getAttribute('data-question'));
                         const input = document.getElementById(`new-answer-${questionIndex}`);
                         const answerText = input.value.trim();
-                        
+
                         if (answerText) {
                             questions[questionIndex].answers.push({
                                 text: answerText,
                                 timestamp: new Date().toISOString()
                             });
-                            
+
                             input.value = '';
                             saveData();
                             displayAllAnswers();
@@ -876,11 +920,11 @@
                     });
                 });
             }
-            
+
             // Edit answer in all answers view
             function editAnswerInAllView(questionIndex, answerIndex) {
                 const answer = questions[questionIndex].answers[answerIndex];
-                
+
                 const newText = prompt("Modifier votre réponse:", answer.text);
                 if (newText !== null && newText.trim() !== '') {
                     answer.text = newText.trim();
@@ -889,7 +933,7 @@
                     displayAllAnswers();
                 }
             }
-            
+
             // Delete answer in all answers view
             function deleteAnswerInAllView(questionIndex, answerIndex) {
                 if (confirm("Êtes-vous sûr de vouloir supprimer cette réponse ?")) {
@@ -898,14 +942,14 @@
                     displayAllAnswers();
                 }
             }
-            
+
             // Prepare export content
             function prepareExportContent() {
                 const csvRows = [];
-                
+
                 // Add header row
                 csvRows.push(['Question', 'Sentiment', 'Période', 'Domaine', 'Réponse', 'Date'].join(','));
-                
+
                 // Add data rows
                 questions.forEach((question, index) => {
                     if (question.answers.length === 0) {
@@ -930,14 +974,14 @@
                         });
                     }
                 });
-                
+
                 exportContent.value = csvRows.join('\n');
             }
-            
+
             // Export answers to CSV
             function exportAnswers() {
                 prepareExportContent();
-                
+
                 const blob = new Blob([exportContent.value], { type: 'text/csv;charset=utf-8;' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
@@ -948,12 +992,12 @@
                 link.click();
                 document.body.removeChild(link);
             }
-            
+
             // Copy export content to clipboard
             function copyExportContent() {
                 exportContent.select();
                 document.execCommand('copy');
-                
+
                 // Show feedback
                 const originalText = copyExport.textContent;
                 copyExport.textContent = 'Copié !';
@@ -961,21 +1005,21 @@
                     copyExport.textContent = originalText;
                 }, 2000);
             }
-            
+
             // Handle file selection for import
             function handleFileSelect(event) {
                 const file = event.target.files[0];
                 if (!file) return;
-                
+
                 selectedFileName.textContent = file.name;
-                
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     importContent.value = e.target.result;
                 };
                 reader.readAsText(file);
             }
-            
+
             // Import answers from CSV
             function importAnswers() {
                 const csvData = importContent.value.trim();
@@ -983,25 +1027,25 @@
                     alert('Veuillez coller ou sélectionner un fichier CSV à importer.');
                     return;
                 }
-                
+
                 if (confirm('Cette action remplacera toutes vos réponses actuelles. Continuer ?')) {
                     try {
                         // Parse CSV
                         const lines = csvData.split('\n');
                         const headers = lines[0].split(',');
-                        
+
                         // Reset all answers
                         questions.forEach(q => q.answers = []);
-                        
+
                         // Process data rows
                         for (let i = 1; i < lines.length; i++) {
                             const values = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                            
+
                             if (values.length >= 6) {
                                 const questionIndex = parseInt(values[0]) - 1;
                                 const answerText = values[4].replace(/^"|"$/g, '').replace(/""/g, '"');
                                 const timestamp = values[5] || new Date().toISOString();
-                                
+
                                 if (questionIndex >= 0 && questionIndex < questions.length && answerText) {
                                     questions[questionIndex].answers.push({
                                         text: answerText,
@@ -1010,12 +1054,12 @@
                                 }
                             }
                         }
-                        
+
                         // Save and refresh
                         saveData();
                         displayQuestion(currentQuestionIndex);
                         populateQuestionsList();
-                        
+
                         alert('Importation réussie !');
                         navigateToView('menu');
                     } catch (error) {
@@ -1024,17 +1068,17 @@
                     }
                 }
             }
-            
+
             // Save data to localStorage
             function saveData() {
                 const data = {
                     questions,
                     currentQuestionIndex
                 };
-                
+
                 localStorage.setItem('introspectionAppData', JSON.stringify(data));
             }
-            
+
             // Initialize the application
             init();
         });
